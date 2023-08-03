@@ -20,6 +20,12 @@ class Converter:
         self.temp_instructions.grid(row=1)
 
 
+        # entry box
+        self.temp_entry = Entry(self.temp_frame, font=('Arial','14'))
+        self.temp_entry.grid(row=2,padx=10,pady=10)
+        
+        #error label
+        self.temp_error = Label(self.temp_frame, text= 'Error message if file name is invalid', font= )
 
 
 # main routine
