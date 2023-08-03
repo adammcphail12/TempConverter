@@ -30,8 +30,7 @@ class Converter:
         self.temp_entry.grid(row=2,padx=10,pady=10)
         
         #error label
-        error = 'Please enter a number'
-        self.temp_error = Label(self.temp_frame, text= error, font= 'Arial', fg='#9C0000' )
+        self.temp_error = Label(self.temp_frame,text = '', font= ('Arial', 9), fg='#9C0000' )
         self.temp_error.grid(row=3)
 
         #button frame 
@@ -39,7 +38,7 @@ class Converter:
         self.button_frame.grid(row=4)
 
         #to celcious button
-        self.to_celsius_button = Button(self.button_frame, text = 'To degrees C', bg = '#990099', fg = BUTTON_FG, font= BUTTON_FONT , width = 12) 
+        self.to_celsius_button = Button(self.button_frame, text = 'To degrees C', bg = '#990099', fg = BUTTON_FG, font= BUTTON_FONT , width = 12, command=self.to_celsius) 
         self.to_celsius_button.grid(row = 0, column = 0,padx = 5, pady = 5)
 
         # to farrenheit button
@@ -53,6 +52,33 @@ class Converter:
         #history button
         self.to_history_button = Button(self.button_frame, text= 'History / Export', bg = '#004C99', fg = BUTTON_FG, font = BUTTON_FONT, width = 12, state= DISABLED)
         self.to_history_button.grid(row = 1, column = 1, padx = 5, pady = 5)
+
+
+    # input checker, designed to make sure a value is more then a set variable, we will ue this to check that the users 
+    # inputs are actualy valid ones.
+    def check_temp(self, min_value):
+        error = 'Please enter a value that is more than {}'.format(min_value)
+        
+        
+        try:
+            response = self.temp_entry.get()
+            response = float(response)
+
+            if response < min_value:
+                print(error)
+            else:
+                return response
+            
+        except ValueError:
+            self.temp_error.config(text=error)
+    
+    # convert to celsius function
+    def to_celsius(self):
+        
+        self.check_temp(-459)
+
+
+
 
 # main routine
 if __name__ == '__main__':
