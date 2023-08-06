@@ -11,6 +11,8 @@ class Converter:
         self.var_has_error = StringVar()
         self.var_has_error.set('no')
 
+        self.all_calculations = []
+
 
         
         #common format for all buttons
@@ -47,11 +49,11 @@ class Converter:
         self.button_frame.grid(row=4)
 
         #to celcious button
-        self.to_celsius_button = Button(self.button_frame, text = 'To degrees C', bg = '#990099', fg = BUTTON_FG, font= BUTTON_FONT , width = 12, command=self.temp_convert(-459)) 
+        self.to_celsius_button = Button(self.button_frame, text = 'To degrees C', bg = '#990099', fg = BUTTON_FG, font= BUTTON_FONT , width = 12, command=lambda:self.temp_convert(-459)) 
         self.to_celsius_button.grid(row = 0, column = 0,padx = 5, pady = 5)
 
         # to farrenheit button
-        self.to_farrenheit_button = Button(self.button_frame, text = 'To degrees F',bg = '#009900', fg = BUTTON_FG, font= BUTTON_FONT, width = 12, command=self.temp_convert(-273))
+        self.to_farrenheit_button = Button(self.button_frame, text = 'To degrees F',bg = '#009900', fg = BUTTON_FG, font= BUTTON_FONT, width = 12, command=lambda:self.temp_convert(-273) )
         self.to_farrenheit_button.grid(row = 0, column = 1, padx = 5, pady= 5)
 
         #help info button
@@ -62,12 +64,6 @@ class Converter:
         self.to_history_button = Button(self.button_frame, text= 'History / Export', bg = '#004C99', fg = BUTTON_FG, font = BUTTON_FONT, width = 12, state= DISABLED)
         self.to_history_button.grid(row = 1, column = 1, padx = 5, pady = 5)
 
-
-    # rounds answers to whole numbers
-    @staticmethod
-    def round_ans(val):
-        var_rounded = (val * 2 + 1) // 2
-        return '{:.0f}'.format(var_rounded)
 
     # input checker, designed to make sure a value is more then a set variable, we will ue this to check that the users 
     # inputs are actualy valid ones.
@@ -105,39 +101,48 @@ class Converter:
             self.to_history_button.config(state=NORMAL)
             return response
 
-       
-    
+    # rounds answers in a specific way. 
+    @staticmethod
+    def round_ans(val):
+        var_rounded = (val * 2 + 1) // 2
+        return '{:.0f}'.format(var_rounded)
 
-    # check temputure is valid and convert it
+    # check temp is valid and convert it.
     def temp_convert(self, min_val):
         
         to_convert = self.check_temp(min_val)
-        degree_sign = u'\N{DEGREE SIGN}'
-        set_feedback = 'yes'
-        answer = ''
+        deg_sign=u'\N{DEGREE SIGN}'
         from_to = ''
-        if to_convert != 'invalid':
+        answer = ''
+
+        set_feedback = 'yes'
+        if to_convert == 'invalid':
             set_feedback = 'no'
         # convert to celsius
         elif min_val == -459:
-            # do calculation
             answer = (to_convert - 32) * 5 / 9
-            from_to = '{} F{} is {} C{}'
-        
-        # convert to fahrenheit 
+            from_to = '{} F{} is {} {}C'
         else:
-            # do calculation
+            # convert to Fahrenheit
             answer = to_convert * 1.8 + 32
-            from_to = '{} C{} is {} C{}'
+            from_to = '{} C{} is {} {}F'
 
+        # feeedback statement 
         if set_feedback == 'yes':
             to_convert = self.round_ans(to_convert)
             answer = self.round_ans(answer)
 
-            #creates user output and add to calculation history
-            feedback = from_to.format(to_convert, degree_sign, answer, degree_sign)
+            # create user output and add to calculation history
+            feedback = from_to.format(to_convert, deg_sign, answer, deg_sign)
+            #update the feedback statement
             self.var_feedback.set(feedback)
-    
+
+            # adds to calculation history
+            self.all_calculations.append(feedback)
+
+            # delete code below when history componenet is working
+            print(self.all_calculations)
+
         self.output_answer()
 
     # shows user output and clears entry widget
