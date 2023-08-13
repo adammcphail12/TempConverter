@@ -55,13 +55,29 @@ class HistoryExport:
 
         # calculations label
         calculations = ['example\n', 'example\n', 'example\n']
-        self.history_calculations_label = Label(self.history_frame, text= calculations, justify = 'center', bg = '#ffffff', width = 46)
+        self.history_calculations_label = Label(self.history_frame, text= calculations, justify = 'center', bg = '#ffe6cc', width = 46)
         self.history_calculations_label.grid(row = 2, padx = 10, pady = 10)
 
+        # text 2 label
+        history_text_2 = 'Either choose a custom file name (and push <Export>) or simply push <Export> to save your calculations in a text file. If the filename allready exists it will be overwritten!'
+        self.history_text_2_label = Label(self.history_frame, text = history_text_2, wrap = 350, justify = 'left')
+        self.history_text_2_label.grid(row = 3, padx = 10)
+
+        # entry box
+        self.text_file_entry = Entry(self.history_frame, font=('Arial','14'))
+        self.text_file_entry.grid(row=4,padx=10,pady=10)
+
+        # error label 
+        self.history_text_error = Label(self.history_frame, text = 'Filename error goes here', justify = 'center', font = ('Arial', '13', 'bold'), fg = '#FF0000')
+        self.history_text_error.grid(row = 5)
+
+        # Export Button
+        self.export_button = Button(self.history_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12)
+        self.export_button.grid(row = 6, column = 0, padx = 5, pady = 5)
 
         # dismiss button
-        self.dismiss_button = Button(self.history_frame, font = ('Arial', '12', 'bold'), text = 'Dismiss', bg = '#666666', fg = '#ffffff', command = partial(self.close_history, partner))
-        self.dismiss_button.grid(row = 3, padx = 10, pady = 10)
+        self.dismiss_button = Button(self.history_frame, font = ('Arial', '12', 'bold'), text = 'Dismiss', bg = '#666666', fg = '#ffffff', width = 12,command = partial(self.close_history, partner))
+        self.dismiss_button.grid(row = 6, column = 1, padx = 5, pady = 5)
 
         #close help dialouge (used by x at top of dialouge)
     def close_history(self, partner):
