@@ -71,13 +71,18 @@ class HistoryExport:
         self.history_text_error = Label(self.history_frame, text = 'Filename error goes here', justify = 'center', font = ('Arial', '13', 'bold'), fg = '#FF0000')
         self.history_text_error.grid(row = 5)
 
+        # button frame - creates a simple grid that is good for putting buttons on
+        self.history_button_frame = Frame(self.history_frame)
+        self.history_button_frame.grid(row = 6)
+
+
         # Export Button
-        self.export_button = Button(self.history_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12)
-        self.export_button.grid(row = 6, column = 0, padx = 5, pady = 5)
+        self.export_button = Button(self.history_button_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12)
+        self.export_button.grid(row = 0, column = 0, padx = 5, pady = 5)
 
         # dismiss button
-        self.dismiss_button = Button(self.history_frame, font = ('Arial', '12', 'bold'), text = 'Dismiss', bg = '#666666', fg = '#ffffff', width = 12,command = partial(self.close_history, partner))
-        self.dismiss_button.grid(row = 6, column = 1, padx = 5, pady = 5)
+        self.dismiss_button = Button(self.history_button_frame, font = ('Arial', '12', 'bold'), text = 'Dismiss', bg = '#666666', fg = '#ffffff', width = 12,command = partial(self.close_history, partner))
+        self.dismiss_button.grid(row = 0, column = 1, padx = 5, pady = 5)
 
         #close help dialouge (used by x at top of dialouge)
     def close_history(self, partner):
