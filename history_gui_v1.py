@@ -4,6 +4,12 @@ from functools import partial # to prevent unwanted windows
 class Converter:
     
     def __init__(self):
+        # testin list 
+        # 5 item list
+        self.all_calculations = ['19 C° is 66 °F', '17 F° is -8 °C', '167 C° is 333 °F', '15 C° is 59 °F', '96 F° is 36 °C',]
+
+        # six item
+        self.all_calculations = ['19 C° is 66 °F', '17 F° is -8 °C', '167 C° is 333 °F', '15 C° is 59 °F', '96 F° is 36 °C', '65 F° is 18 °C']
 
         #common format for all buttons
         BUTTON_FONT = ('Arial', '12', 'bold')
@@ -21,7 +27,7 @@ class Converter:
 
 
         # history info button
-        self.to_history_button = Button(self.button_frame, text = 'History / Export', bg = '#004C99', fg = BUTTON_FG ,font= BUTTON_FONT, width = 12, command=self.to_history)
+        self.to_history_button = Button(self.button_frame, text = 'History / Export', bg = '#004C99', fg = BUTTON_FG ,font= BUTTON_FONT, width = 12, command=lambda: self.to_history(self.all_calcuations))
         self.to_history_button.grid(row = 1, column = 1, padx = 5, pady=5)
 
         # renove when intergrating 
@@ -34,6 +40,9 @@ class HistoryExport:
     def __init__(self, partner):
         # setup dialouge box and back ground color 
         self.history_box = Toplevel()
+
+        
+        
 
         #  disable the history / export button
         partner.to_history_button.config(state = DISABLED)

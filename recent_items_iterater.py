@@ -5,13 +5,6 @@ def iterate_recent(data):
     reversed_data = (list(reversed_data))
     print(reversed_data)
 
-
-
-
-
-
-
-
 # ----- Main Routine ---------
  # First we need a function that asks users to add fruits to a basket. This is we can then design the loop to spit those fruits back out, in the order of most recently added, to the first item added.
 
@@ -23,6 +16,8 @@ while True:
 
     if fruit == 'XXX' and len(fruit_basket) > 0:
         break
+    elif fruit == 'XXX' and len(fruit_basket) == 0:
+        print('You need to have at least one Item!')
     else:
         fruit_basket.append(fruit)
 
