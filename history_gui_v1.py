@@ -27,23 +27,32 @@ class Converter:
 
 
         # history info button
-        self.to_history_button = Button(self.button_frame, text = 'History / Export', bg = '#004C99', fg = BUTTON_FG ,font= BUTTON_FONT, width = 12, command=lambda: self.to_history(self.all_calcuations))
+        self.to_history_button = Button(self.button_frame, text = 'History / Export', bg = '#004C99', fg = BUTTON_FG ,font= BUTTON_FONT, width = 12, command=lambda: self.to_history(self.all_calculations))
         self.to_history_button.grid(row = 1, column = 1, padx = 5, pady=5)
 
         # renove when intergrating 
         self.to_history_button.config(state = NORMAL)
-    def to_history(self):
-        HistoryExport(self)
+    def to_history(self, all_calculations):
+        HistoryExport(self, all_calculations)
 
 
 class HistoryExport:
-    def __init__(self, partner):
+    def __init__(self, partner, calc_list):
+        
+        #set maximum number of calculations to 5
+        #this can be changed if we want to show fewer or more calculations
+
+        max_calcs = 5
+        self.var_max_calcs = IntVar()
+        self.var_max_calcs.set(max_calcs)
+
+        # function converts contents of calculation list into a string
+        calc_string_text = self.get_calc_string(calc_list)
+        
+        
+        
         # setup dialouge box and back ground color 
         self.history_box = Toplevel()
-
-        
-        
-
         #  disable the history / export button
         partner.to_history_button.config(state = DISABLED)
         # if the user press cross at the top , closes help box and release help button
