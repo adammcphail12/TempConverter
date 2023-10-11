@@ -6,7 +6,7 @@ class Converter:
     def __init__(self):
         # testin list 
         # 5 item list
-        self.all_calculations = ['19 C° is 66 °F', '17 F° is -8 °C', '167 C° is 333 °F', '15 C° is 59 °F','homie']
+        self.all_calculations = ['19 C° is 66 °F', '17 F° is -8 °C', '167 C° is 333 °F', '15 C° is 59 °F','homie', 'broski']
 
         
 
