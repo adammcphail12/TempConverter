@@ -1,12 +1,14 @@
 from tkinter import *
 from functools import partial # to prevent unwanted windows
+from datetime import date
+import re
 
 class Converter:
     
     def __init__(self):
         # testin list 
         # 5 item list
-        self.all_calculations = ['19 C° is 66 °F', '17 F° is -8 °C', '167 C° is 333 °F', '15 C° is 59 °F','homie', 'broski']
+        self.all_calculations = ['19 C° is 66 °F', '17 F° is -8 °C', '167 C° is 333 °F', '15 C° is 59 °F','homie']
 
         
 
@@ -100,8 +102,8 @@ class HistoryExport:
         self.text_file_entry.grid(row=4,padx=10,pady=10)
 
         # error label 
-        self.history_text_error = Label(self.history_frame, text = 'Filename error goes here', justify = 'center', font = ('Arial', '13', 'bold'), fg = '#FF0000')
-        self.history_text_error.grid(row = 5)
+        self.filename_error_label= Label(self.history_frame, text = 'Filename error goes here', justify = 'center', font = ('Arial', '13', 'bold'), fg = '#FF0000', wraplength = 300)
+        self.filename_error_label.grid(row = 5)
 
         # button frame - creates a simple grid that is good for putting buttons on
         self.history_button_frame = Frame(self.history_frame)
@@ -145,6 +147,65 @@ class HistoryExport:
         return calc_string
 
         #close help dialouge (used by x at top of dialouge)
+    
+    #if filename is blank returns default name
+    # otherwise checks file name and either returns an error or returns the filename 
+    # with .txt extension
+
+    def filename_maker(self,filename):
+
+        #creates default filename
+        # (YYYY_MM_DD_temperature_calculations)
+        if filename == '':
+            #set filename_ok to '' so we can see default name for testing purposes
+            filename_ok = ''
+            date_part = self.get_date() 
+            filename = '{}_temperature_calculations'.format(date_part)
+    
+        #checks filename only has a-z /A-Z / underscores
+        else:
+            filename_ok = self.check_filename(filename)
+
+        if filename_ok == '':
+            filename += '.txt'
+        else:
+            filename = filename_ok
+    
+        return filename
+        
+
+    #retrieves data and creates YYYY_MM_DD string
+
+    def get_date():
+        today = date.today()
+        day = today.strftime('%d')
+        month = today.strftime('%m')
+        year = today.strftime('%Y')
+        return '{}_{}_{}'.format(year, month, day)
+
+
+
+
+    #checks that file name only contains letters
+    # numbers and underscores Returns either '' if 
+    # ok or the problem if we have an error 
+    def check_filename(filename):
+        problem = ''
+        #regular expression  to check file name is valid 
+        valid_char = '[A-Za-z0-9_]'
+        # iterates through file name and checks each letter.
+        for letter in filename: 
+            if re.match(valid_char, letter):
+                continue
+            elif letter == ' ':
+                problem = 'Sorry, no spaces allowed'
+            else:
+                problem = ('Sorry, no {}s allowed'.format(letter))
+            break
+        if problem != '':
+            problem = '{}. Use Letters \ Numbers \ underscores only'.format(problem)
+        return problem
+
     
     def close_history(self, partner):
         # put help back to normal ...
