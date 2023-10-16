@@ -163,9 +163,14 @@ class HistoryExport:
 
         if filename_ok == '':
             filename += '.txt'
-            self.filename_feedback_label.config(text='You are OK')
+            success = 'Success! Your Calculation history has been saved as {}'.format(filename)
+            self.var_filename.set(filename)
+            self.filename_feedback_label.config(text = success, fg = 'dark green')
+            self.filename_entry.config(bg='#FFFFFF')
         else:
             self.filename_feedback_label.config(text=filename_ok)
+            self.filename_feedback_label.config(text=filename_ok,fg = 'dark red')
+            self.filename_entry.config(bg='#F8CECC')
     
 
     #retrieves data and creates YYYY_MM_DD string
