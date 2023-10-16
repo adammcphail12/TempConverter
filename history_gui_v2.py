@@ -31,8 +31,6 @@ class Converter:
         self.to_history_button = Button(self.button_frame, text = 'History / Export', bg = '#004C99', fg = BUTTON_FG ,font= BUTTON_FONT, width = 12, command=lambda: self.to_history(self.all_calculations))
         self.to_history_button.grid(row = 1, column = 1, padx = 5, pady=5)
 
-        # renove when intergrating 
-        self.to_history_button.config(state = NORMAL)
     def to_history(self, all_calculations):
         HistoryExport(self, all_calculations)
 
@@ -47,10 +45,13 @@ class HistoryExport:
         self.var_max_calcs = IntVar()
         self.var_max_calcs.set(max_calcs)
 
+        #set variable to hold filename and date 
+        # for when writing to file
+        self.var_filename = StringVar()
+        self.var_todays_date = StringVar()
+
         # function converts contents of calculation list into a string
         calc_string_text = self.get_calc_string(calc_list)
-        
-        
         
         # setup dialouge box and back ground color 
         self.history_box = Toplevel()
@@ -98,12 +99,12 @@ class HistoryExport:
         self.history_text_2_label.grid(row = 3, padx = 10)
 
         # entry box
-        self.text_file_entry = Entry(self.history_frame, font=('Arial','14'))
-        self.text_file_entry.grid(row=4,padx=10,pady=10)
+        self.filename_entry = Entry(self.history_frame, font=('Arial','14'))
+        self.filename_entry.grid(row=4,padx=10,pady=10)
 
         # error label 
-        self.filename_error_label= Label(self.history_frame, text = 'Filename error goes here', justify = 'center', font = ('Arial', '13', 'bold'), fg = '#FF0000', wraplength = 300)
-        self.filename_error_label.grid(row = 5)
+        self.filename_feedback_label= Label(self.history_frame, text = '', justify = 'center', font = ('Arial', '13', 'bold'), fg = '#9C0000', wraplength = 300)
+        self.filename_feedback_label.grid(row = 5)
 
         # button frame - creates a simple grid that is good for putting buttons on
         self.history_button_frame = Frame(self.history_frame)
@@ -111,7 +112,7 @@ class HistoryExport:
 
 
         # Export Button
-        self.export_button = Button(self.history_button_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12)
+        self.export_button = Button(self.history_button_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12, command=self.make_file)
         self.export_button.grid(row = 0, column = 0, padx = 5, pady = 5)
 
         # dismiss button
@@ -148,48 +149,42 @@ class HistoryExport:
 
         #close help dialouge (used by x at top of dialouge)
     
-    #if filename is blank returns default name
-    # otherwise checks file name and either returns an error or returns the filename 
-    # with .txt extension
+    def make_file(self):
+        filename = self.filename_entry.get()
+        filename_ok = ''
 
-    def filename_maker(self,filename):
-
-        #creates default filename
-        # (YYYY_MM_DD_temperature_calculations)
         if filename == '':
-            #set filename_ok to '' so we can see default name for testing purposes
-            filename_ok = ''
-            date_part = self.get_date() 
+            #get date and create default filenam
+            date_part = self.get_date()
             filename = '{}_temperature_calculations'.format(date_part)
-    
-        #checks filename only has a-z /A-Z / underscores
         else:
+            # check filename is valid
             filename_ok = self.check_filename(filename)
 
         if filename_ok == '':
             filename += '.txt'
+            self.filename_feedback_label.config(text='You are OK')
         else:
-            filename = filename_ok
+            self.filename_feedback_label.config(text=filename_ok)
     
-        return filename
-        
 
     #retrieves data and creates YYYY_MM_DD string
 
-    def get_date():
+    def get_date(self):
         today = date.today()
         day = today.strftime('%d')
         month = today.strftime('%m')
         year = today.strftime('%Y')
+        todays_date = '{}_{}_{}'.format(year, month, day)
+        self.var_todays_date.set(todays_date)
         return '{}_{}_{}'.format(year, month, day)
-
-
-
 
     #checks that file name only contains letters
     # numbers and underscores Returns either '' if 
     # ok or the problem if we have an error 
+    @staticmethod
     def check_filename(filename):
+
         problem = ''
         #regular expression  to check file name is valid 
         valid_char = '[A-Za-z0-9_]'
