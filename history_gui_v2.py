@@ -49,9 +49,10 @@ class HistoryExport:
         # for when writing to file
         self.var_filename = StringVar()
         self.var_todays_date = StringVar()
+        self.var_calc_list = StringVar
 
         # function converts contents of calculation list into a string
-        calc_string_text = self.get_calc_string(calc_list)
+        self.calc_string_text = self.get_calc_string(calc_list)
         
         # setup dialouge box and back ground color 
         self.history_box = Toplevel()
@@ -90,7 +91,7 @@ class HistoryExport:
 
         # calculations label
         
-        self.history_calculations_label = Label(self.history_frame, text= calc_string_text, justify = 'center', bg = calc_background, width = 46)
+        self.history_calculations_label = Label(self.history_frame, text= self.calc_string_text, justify = 'center', bg = calc_background, width = 46)
         self.history_calculations_label.grid(row = 2, padx = 10, pady = 10)
 
         # text 2 label
@@ -127,6 +128,15 @@ class HistoryExport:
         max_calcs = self.var_max_calcs.get()
         calc_string = ''
 
+        #generate string for writing to file
+        # (the oldest calculation first)
+        oldest_first = ''
+        for item in var_calculations:
+            oldest_first += item
+            oldest_first += '\n'
+        
+        self.var_calc_list.set(oldest_first)
+
         #work out how many times we need to loop
         # to output either the last five calculations or all calculations
         if len(var_calculations) >= max_calcs:
@@ -153,9 +163,11 @@ class HistoryExport:
         filename = self.filename_entry.get()
         filename_ok = ''
 
+        date_part = self.get_date()
+
         if filename == '':
             #get date and create default filenam
-            date_part = self.get_date()
+            
             filename = '{}_temperature_calculations'.format(date_part)
         else:
             # check filename is valid
@@ -167,10 +179,15 @@ class HistoryExport:
             self.var_filename.set(filename)
             self.filename_feedback_label.config(text = success, fg = 'dark green')
             self.filename_entry.config(bg='#FFFFFF')
+
+            #write content to file
+            self.write_to_file(filename, date_part,self.calc_string_list)
         else:
             self.filename_feedback_label.config(text=filename_ok)
             self.filename_feedback_label.config(text=filename_ok,fg = 'dark red')
             self.filename_entry.config(bg='#F8CECC')
+        
+
     
 
     #retrieves data and creates YYYY_MM_DD string
@@ -207,6 +224,15 @@ class HistoryExport:
         return problem
 
     
+    #writes to a file
+    def write_to_file(filename, date, calc_string_test):
+        print(calc_string_test,date)
+        with open(filename, 'w') as f:
+            f.write('{}\nDate:{}\nData:\n{}'.format(filename,date,calc_string_test))
+        
+
+
+
     def close_history(self, partner):
         # put help back to normal ...
         partner.to_history_button.config(state = NORMAL)
