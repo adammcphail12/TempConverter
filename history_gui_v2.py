@@ -49,10 +49,10 @@ class HistoryExport:
         # for when writing to file
         self.var_filename = StringVar()
         self.var_todays_date = StringVar()
-        self.var_calc_list = StringVar
+        self.var_calc_list = StringVar()
 
         # function converts contents of calculation list into a string
-        self.calc_string_text = self.get_calc_string(calc_list)
+        calc_string_text = self.get_calc_string(calc_list)
         
         # setup dialouge box and back ground color 
         self.history_box = Toplevel()
@@ -91,7 +91,7 @@ class HistoryExport:
 
         # calculations label
         
-        self.history_calculations_label = Label(self.history_frame, text= self.calc_string_text, justify = 'center', bg = calc_background, width = 46)
+        self.history_calculations_label = Label(self.history_frame, text= calc_list, justify = 'center', bg = calc_background, width = 46)
         self.history_calculations_label.grid(row = 2, padx = 10, pady = 10)
 
         # text 2 label
@@ -113,7 +113,7 @@ class HistoryExport:
 
 
         # Export Button
-        self.export_button = Button(self.history_button_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12, command=self.make_file)
+        self.export_button = Button(self.history_button_frame, font = ('Arial', '12', 'bold'), text = 'Export', bg = '#004C99', fg = '#ffffff', width = 12, command=self.make_file(calc_string_text))
         self.export_button.grid(row = 0, column = 0, padx = 5, pady = 5)
 
         # dismiss button
@@ -154,12 +154,13 @@ class HistoryExport:
         #add final item without extra linebreak
         # ie last item on list will be fifth from the end
         calc_string += var_calculations[-max_calcs]
+        print("calc string in function", calc_string)
 
         return calc_string
 
         #close help dialouge (used by x at top of dialouge)
     
-    def make_file(self):
+    def make_file(self, calc_string_list):
         filename = self.filename_entry.get()
         filename_ok = ''
 
@@ -181,7 +182,7 @@ class HistoryExport:
             self.filename_entry.config(bg='#FFFFFF')
 
             #write content to file
-            self.write_to_file(filename, date_part,self.calc_string_list)
+            self.write_to_file(filename, date_part, calc_string_list)
         else:
             self.filename_feedback_label.config(text=filename_ok)
             self.filename_feedback_label.config(text=filename_ok,fg = 'dark red')
@@ -225,10 +226,11 @@ class HistoryExport:
 
     
     #writes to a file
-    def write_to_file(filename, date, calc_string_test):
+    def write_to_file(self, filename, date, calc_string_test):
         print(calc_string_test,date)
         with open(filename, 'w') as f:
             f.write('{}\nDate:{}\nData:\n{}'.format(filename,date,calc_string_test))
+            f.close
         
 
 
